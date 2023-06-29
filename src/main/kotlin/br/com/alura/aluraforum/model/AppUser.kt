@@ -1,4 +1,4 @@
-package model
+package br.com.alura.aluraforum.model
 
 data class AppUser(
     val id: Long? = null,
