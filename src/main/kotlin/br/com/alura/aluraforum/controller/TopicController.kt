@@ -1,23 +1,26 @@
 package br.com.alura.aluraforum.controller
 
-import br.com.alura.aluraforum.model.Topic
+import br.com.alura.aluraforum.dto.TopicInputDTO
+import br.com.alura.aluraforum.dto.TopicResponseDTO
 import br.com.alura.aluraforum.service.TopicService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
 @RequestMapping("/topics")
 class TopicController(private val service: TopicService) {
     @GetMapping
-    fun list(): List<Topic> {
+    fun list(): List<TopicResponseDTO> {
         return service.list()
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): Topic {
+    fun getById(@PathVariable id: Long): TopicResponseDTO {
         return service.getById(id)
+    }
+
+    @PostMapping
+    fun create(@RequestBody dto: TopicInputDTO) {
+        return service.create(dto)
     }
 }

@@ -1,68 +1,50 @@
 package br.com.alura.aluraforum.service
 
-import br.com.alura.aluraforum.model.AppUser
-import br.com.alura.aluraforum.model.Course
+import br.com.alura.aluraforum.dto.TopicInputDTO
+import br.com.alura.aluraforum.dto.TopicResponseDTO
 import br.com.alura.aluraforum.model.Topic
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 
 @Service
-class TopicService(private var topics: List<Topic>) {
-    init {
-        val topic = Topic(
-            id = 1,
-            title = "Duvida Kotlin",
-            message = "xxx",
-            course = Course(
-                id = 1,
-                name = "Kotlin",
-                category = "programming"
-            ),
-            author = AppUser(
-                id = 1,
-                name = "Ana da Silva",
-                email = "ana@email.com"
-            )
-        )
-        val topic2 = Topic(
-            id = 2,
-            title = "Duvida Kotlin",
-            message = "xxx",
-            course = Course(
-                id = 1,
-                name = "Kotlin",
-                category = "programming"
-            ),
-            author = AppUser(
-                id = 1,
-                name = "Ana da Silva",
-                email = "ana@email.com"
-            )
-        )
-        val topic3 = Topic(
-            id = 3,
-            title = "Duvida Kotlin",
-            message = "xxx",
-            course = Course(
-                id = 1,
-                name = "Kotlin",
-                category = "programming"
-            ),
-            author = AppUser(
-                id = 1,
-                name = "Ana da Silva",
-                email = "ana@email.com"
-            )
-        )
+class TopicService(
+    private var topics: List<Topic> = listOf(),
+    private val courseService: CourseService,
+    private val userService: UserService
+) {
 
-        topics = listOf(topic, topic2, topic3)
-    }
-    fun list(): List<Topic> {
-        return topics
+    fun list(): List<TopicResponseDTO> {
+        return topics.stream().map { TopicResponseDTO(
+            id = it.id!!,
+            title = it.title,
+            message = it.message,
+            status = it.status,
+            createdAt = it.createdAt
+        ) }.collect(Collectors.toList())
     }
 
-    fun getById(id: Long): Topic {
-        return topics.stream().filter { t ->
+    fun getById(id: Long): TopicResponseDTO {
+        val topic = topics.stream().filter { t ->
             t.id == id
         }.findFirst().get()
+        return TopicResponseDTO(
+            id = topic.id!!,
+            title = topic.title,
+            message = topic.message,
+            status = topic.status,
+            createdAt = topic.createdAt
+        )
+    }
+
+    fun create(dto: TopicInputDTO) {
+        topics = topics.plus(
+            Topic(
+                id = topics.size.toLong() + 1,
+                title = dto.title,
+                message = dto.message,
+                course = courseService.getById(dto.courseId),
+                author = userService.getById(dto.authorId)
+            )
+        )
     }
 }
