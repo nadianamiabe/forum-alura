@@ -1,7 +1,6 @@
 package br.com.alura.aluraforum.service
 
 import br.com.alura.aluraforum.model.AppUser
-import br.com.alura.aluraforum.model.Course
 import org.springframework.stereotype.Service
 
 @Service
