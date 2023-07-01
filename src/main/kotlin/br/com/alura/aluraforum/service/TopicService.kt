@@ -3,6 +3,7 @@ package br.com.alura.aluraforum.service
 import br.com.alura.aluraforum.dto.TopicInputDTO
 import br.com.alura.aluraforum.dto.TopicResponseDTO
 import br.com.alura.aluraforum.dto.TopicUpdateInputDTO
+import br.com.alura.aluraforum.exception.NotFoundException
 import br.com.alura.aluraforum.mapper.TopicInputDTOMapper
 import br.com.alura.aluraforum.mapper.TopicResponseDTOMapper
 import br.com.alura.aluraforum.model.Topic
@@ -13,7 +14,8 @@ import java.util.stream.Collectors
 class TopicService(
     private var topics: List<Topic> = listOf(),
     private val topicResponseDTOMapper: TopicResponseDTOMapper,
-    private val topicInputDTOMapper: TopicInputDTOMapper
+    private val topicInputDTOMapper: TopicInputDTOMapper,
+    private val notFoundMessage: String = "Topic not found"
 ) {
 
     fun list(): List<TopicResponseDTO> {
@@ -21,9 +23,11 @@ class TopicService(
     }
 
     fun getById(id: Long): TopicResponseDTO {
-        val topic = topics.stream().filter { t ->
-            t.id == id
-        }.findFirst().get()
+        val topic = topics
+            .stream()
+            .filter { t -> t.id == id }
+            .findFirst()
+            .orElseThrow{ NotFoundException(notFoundMessage) }
         return topicResponseDTOMapper.map(topic)
     }
 
@@ -35,7 +39,11 @@ class TopicService(
     }
 
     fun update(dto: TopicUpdateInputDTO): TopicResponseDTO {
-        val topic = topics.stream().filter { it.id == dto.id }.findFirst().get()
+        val topic = topics
+            .stream()
+            .filter { it.id == dto.id }
+            .findFirst()
+            .orElseThrow{ NotFoundException(notFoundMessage) }
         val updatedTopic = Topic(
             id = topic.id,
             title = dto.title,
@@ -51,7 +59,11 @@ class TopicService(
     }
 
     fun delete(id: Long) {
-        val topic = topics.stream().filter { it.id == id }.findFirst().get()
+        val topic = topics
+            .stream()
+            .filter { it.id == id }
+            .findFirst()
+            .orElseThrow{ NotFoundException(notFoundMessage) }
         topics = topics.minus(topic)
     }
 }
