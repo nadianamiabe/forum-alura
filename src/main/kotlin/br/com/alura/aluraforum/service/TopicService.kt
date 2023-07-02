@@ -7,6 +7,8 @@ import br.com.alura.aluraforum.exception.NotFoundException
 import br.com.alura.aluraforum.mapper.TopicInputDTOMapper
 import br.com.alura.aluraforum.mapper.TopicResponseDTOMapper
 import br.com.alura.aluraforum.repository.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
@@ -18,13 +20,13 @@ class TopicService(
     private val notFoundMessage: String = "Topic not found"
 ) {
 
-    fun list(courseName: String?): List<TopicResponseDTO> {
+    fun list(courseName: String?, pageable: Pageable): Page<TopicResponseDTO> {
         val topics = if (courseName == null) {
-            repository.findAll()
+            repository.findAll(pageable)
         } else {
-            repository.findByCourseName(courseName)
+            repository.findByCourseName(courseName, pageable)
         }
-        return topics.stream().map { topicResponseDTOMapper.map(it) }.collect(Collectors.toList())
+        return topics.map { topicResponseDTOMapper.map(it) }
     }
 
     fun getById(id: Long): TopicResponseDTO {
