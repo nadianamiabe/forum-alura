@@ -16,8 +16,8 @@ import javax.validation.Valid
 @RequestMapping("/topics")
 class TopicController(private val service: TopicService) {
     @GetMapping
-    fun list(): List<TopicResponseDTO> {
-        return service.list()
+    fun list(@RequestParam(required = false) courseName: String?): List<TopicResponseDTO> {
+        return service.list(courseName)
     }
 
     @GetMapping("/{id}")

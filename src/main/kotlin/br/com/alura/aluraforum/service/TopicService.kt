@@ -18,8 +18,13 @@ class TopicService(
     private val notFoundMessage: String = "Topic not found"
 ) {
 
-    fun list(): List<TopicResponseDTO> {
-        return repository.findAll().stream().map { topicResponseDTOMapper.map(it) }.collect(Collectors.toList())
+    fun list(courseName: String?): List<TopicResponseDTO> {
+        val topics = if (courseName == null) {
+            repository.findAll()
+        } else {
+            repository.findByCourseName(courseName)
+        }
+        return topics.stream().map { topicResponseDTOMapper.map(it) }.collect(Collectors.toList())
     }
 
     fun getById(id: Long): TopicResponseDTO {

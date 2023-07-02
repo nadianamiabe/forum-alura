@@ -4,4 +4,5 @@ import br.com.alura.aluraforum.model.Topic
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface TopicRepository: JpaRepository<Topic, Long> {
+    fun findByCourseName(courseName: String): List<Topic>
 }
