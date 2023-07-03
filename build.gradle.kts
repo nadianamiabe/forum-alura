@@ -43,6 +43,7 @@ dependencies {
 	implementation("com.h2database:h2:2.1.214")
 	implementation("org.flywaydb:flyway-core:9.16.0")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
