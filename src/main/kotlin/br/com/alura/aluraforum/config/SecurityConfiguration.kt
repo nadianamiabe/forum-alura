@@ -1,5 +1,6 @@
 package br.com.alura.aluraforum.config
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -10,23 +11,29 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import kotlin.jvm.Throws
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class SecurityConfiguration {
+class SecurityConfiguration(
+        @Autowired
+        private val filter: JWTAuthenticationFilter
+) {
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain? {
         return http
+                .cors().and().csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/login").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().disable()
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter::class.java)
                 .build()
     }
 
