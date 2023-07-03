@@ -1,6 +1,7 @@
 package br.com.alura.aluraforum.controller
 
 import br.com.alura.aluraforum.dto.TopicInputDTO
+import br.com.alura.aluraforum.dto.TopicPerCategoryDTO
 import br.com.alura.aluraforum.dto.TopicResponseDTO
 import br.com.alura.aluraforum.dto.TopicUpdateInputDTO
 import br.com.alura.aluraforum.service.TopicService
@@ -60,5 +61,10 @@ class TopicController(private val service: TopicService) {
     @Transactional
     fun delete(@PathVariable id: Long) {
         service.delete(id)
+    }
+
+    @GetMapping("/report")
+    fun report(): List<TopicPerCategoryDTO> {
+        return service.report()
     }
 }
