@@ -1,9 +1,7 @@
 package br.com.alura.aluraforum.model
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import com.fasterxml.jackson.annotation.JsonIgnore
+import javax.persistence.*
 
 @Entity
 data class AppUser(
@@ -11,5 +9,10 @@ data class AppUser(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
         val name: String,
-        val email: String
+        val email: String,
+        val password: String,
+        @JsonIgnore
+        @ManyToMany(fetch = FetchType.EAGER)
+        @JoinColumn(name = "app_user_role")
+        val roles: List<Role> = mutableListOf()
 )

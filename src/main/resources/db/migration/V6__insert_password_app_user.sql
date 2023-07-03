@@ -1,0 +1,1 @@
+update app_user set password = '$2a$12$zJ0DPHOOCXd2si8ea9C/ce6PJf4aXt8wZlXJwJl6gITPo45Z3Q40G' where id = 1;
