@@ -26,7 +26,7 @@ class SecurityConfiguration(
         return http
                 .cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/topics").hasAuthority("READ")
+                .antMatchers("/topics").hasAuthority("READ_WRITE")
                 .antMatchers("/login").permitAll()
                 .anyRequest()
                 .authenticated()
