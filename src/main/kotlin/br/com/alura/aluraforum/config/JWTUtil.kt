@@ -12,10 +12,10 @@ import java.time.ZoneOffset
 class JWTUtil {
     @Value("\${jwt.secret}")
     private lateinit var secret: String
-    fun generateToken(user: AppUserDetails): String? {
+    fun generateToken(user: AppUserDetails, authorities: List<String>): String? {
         return JWT.create()
                 .withSubject(user.username)
-                .withClaim("username", user.username)
+                .withClaim("role", authorities)
                 .withExpiresAt(
                         LocalDateTime
                                 .now()

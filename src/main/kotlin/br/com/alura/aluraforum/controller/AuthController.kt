@@ -3,7 +3,6 @@ package br.com.alura.aluraforum.controller
 import br.com.alura.aluraforum.config.JWTUtil
 import br.com.alura.aluraforum.dto.CredentialsDTO
 import br.com.alura.aluraforum.service.AppUserDetails
-import br.com.alura.aluraforum.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -25,6 +24,7 @@ class AuthController(
         )
         val authenticate = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken)
         val user = authenticate.principal as AppUserDetails
-        return jwtUtil.generateToken(user)
+        val authorities = user.authorities.map { it.authority }
+        return jwtUtil.generateToken(user, authorities)
     }
 }

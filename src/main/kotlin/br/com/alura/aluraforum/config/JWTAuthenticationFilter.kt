@@ -1,6 +1,6 @@
 package br.com.alura.aluraforum.config
 
-import br.com.alura.aluraforum.repository.UserRepository
+import br.com.alura.aluraforum.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -15,7 +15,7 @@ class JWTAuthenticationFilter(
         @Autowired
         private val jwtUtil: JWTUtil,
         @Autowired
-        private val userRepository: UserRepository
+        private val userService: UserService
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
             request: HttpServletRequest,
@@ -28,8 +28,8 @@ class JWTAuthenticationFilter(
         if(authorizationHeader != null) {
             token = authorizationHeader.replace("Bearer ", "")
             val subject = jwtUtil.getSubject(token)
-            val user = userRepository.findByEmail(subject)
-            val authentication = UsernamePasswordAuthenticationToken(user, null, null)
+            val user = userService.loadUserByUsername(subject)
+            val authentication = UsernamePasswordAuthenticationToken(user, null, user.authorities)
             SecurityContextHolder.getContext().authentication = authentication
         }
 
