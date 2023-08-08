@@ -3,7 +3,7 @@
  
  2 - Buildar a imagem do docker com o seguinte comando na raiz do projeto:
 
- docker build -t alura-forum
+ docker build -t alura-forum -f Dockerfile.local .
  
  3 - Rodar o conteiner:
 
